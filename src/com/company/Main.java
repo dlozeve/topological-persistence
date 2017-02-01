@@ -10,5 +10,6 @@ public class Main {
         System.out.println(F.toString());
         BoundaryMatrix m = new BoundaryMatrix(F);
         m.reduction();
+        System.out.println(m.barcode());
     }
 }

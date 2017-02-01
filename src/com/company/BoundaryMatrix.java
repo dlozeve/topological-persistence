@@ -9,6 +9,7 @@ import java.util.HashMap;
 public class BoundaryMatrix {
 
     private int n;
+    private Vector<Simplex> G;
     boolean[][] boundaryMatrix;
     int[] lowIndices;
     int[] lowColumn;
@@ -17,6 +18,7 @@ public class BoundaryMatrix {
         this.n = F.size();
         // Sort the Vector of simplices, according to their function value.
         Collections.sort(F);
+        this.G = F;
 
         // These arrays will be useful for reduction
         // lowIndices stores the row index of the lowest non-zero entry for each column.
@@ -53,7 +55,7 @@ public class BoundaryMatrix {
                     TreeSet<Integer> subset = new TreeSet<>(s.vert);
                     subset.remove(k);
                     int j = simplexIndices.get(subset);
-                    boundaryMatrix[i][j] = true;
+                    boundaryMatrix[j][i] = true;
                 }
             }
         }
@@ -86,7 +88,7 @@ public class BoundaryMatrix {
         // We loop through all columns
         for (int j = 0; j < this.n; j++) {
             int low = getLow(j);
-            // While the column is not empty and ther exists a previous column with the same pivot:
+            // While the column is not empty and there exists a previous column with the same pivot:
             while(low != -1 && lowColumn[low] != -1) {
                 // We update the j-th column
                 int i = lowColumn[low];
@@ -101,6 +103,33 @@ public class BoundaryMatrix {
                 lowColumn[low] = j;
             }
         }
+    }
+
+    String barcode() {
+        String res = "";
+        // We loop through all columns
+        for (int j = 0; j < this.n; j++) {
+            // We retrieve the index of the pivot
+            int i = lowIndices[j];
+            // If the column has a pivot, i.e. it is not empty:
+            if (i > -1) {
+                // We get the dimension and the bounds of the interval
+                float valInf = this.G.get(i).val;
+                float valSup = this.G.get(j).val;
+                int dim = this.G.get(i).dim;
+                res += dim + " " + valInf + " " + valSup + "\n";
+            }
+            else {
+                // If the column is empty and the corresponding row has no pivot:
+                if (lowColumn[j] == -1) {
+                    // We add the interval [j, inf)
+                    int dim = this.G.get(j).dim;
+                    float valInf = this.G.get(j).val;
+                    res += dim + " " + valInf + " inf\n";
+                }
+            }
+        }
+        return res;
     }
 
 }
