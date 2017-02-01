@@ -9,5 +9,6 @@ public class Main {
         Vector<Simplex> F = new ReadFiltration().readFiltration("example1.txt");
         System.out.println(F.toString());
         BoundaryMatrix m = new BoundaryMatrix(F);
+        m.reduction();
     }
 }
