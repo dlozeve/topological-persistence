@@ -9,7 +9,7 @@ import java.util.Vector;
 
 
 
-class Simplex {
+class Simplex implements Comparable<Simplex> {
 	float val;
 	int dim;
 	TreeSet<Integer> vert;
@@ -26,6 +26,28 @@ class Simplex {
 		return "{val="+val+"; dim="+dim+"; "+vert+"}\n";
 	}
 
+    @Override
+    public int compareTo(Simplex s) {
+	    // Sort according to val
+	    if (this.val < s.val) {
+	        return -1;
+        }
+        else if (this.val > s.val) {
+	        return 1;
+        }
+        else {
+	        // If the two values are equal, we sort according to the dimension.
+	        if (this.dim < s.dim) {
+	            return -1;
+            }
+            else if (this.dim > s.dim) {
+	            return 1;
+            }
+            else {
+	            return 0;
+            }
+        }
+    }
 }
 
 public class ReadFiltration {
