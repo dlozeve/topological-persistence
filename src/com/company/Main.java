@@ -6,10 +6,10 @@ import java.util.Vector;
 public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
-        Vector<Simplex> F = new ReadFiltration().readFiltration("example1.txt");
-        System.out.println(F.toString());
+        Vector<Simplex> F = new ReadFiltration().readFiltration("filtration_A.txt");
+        //System.out.println(F.toString());
         BoundaryMatrix m = new BoundaryMatrix(F);
         m.reduction();
-        System.out.println(m.barcode());
+        m.barcodeToFile("test.txt");
     }
 }

@@ -1,5 +1,7 @@
 package com.company;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 
@@ -139,6 +141,40 @@ public class BoundaryMatrix {
             }
         }
         return res;
+    }
+
+    void barcodeToFile(String filename) {
+        try{
+            PrintWriter writer = new PrintWriter(filename, "UTF-8");
+
+            // We loop through all columns
+            for (int j = 0; j < this.n; j++) {
+                // We retrieve the index of the pivot
+                int i = lowIndices[j];
+                // If the column has a pivot, i.e. it is not empty:
+                if (i > -1) {
+                    // We get the dimension and the bounds of the interval
+                    float valInf = this.G.get(i).val;
+                    float valSup = this.G.get(j).val;
+                    int dim = this.G.get(i).dim;
+                    if (valSup != valInf) {
+                        writer.println(dim + " " + valInf + " " + valSup);
+                    }
+                } else {
+                    // If the column is empty and the corresponding row has no pivot:
+                    if (lowColumn[j] == -1) {
+                        // We add the interval [j, inf)
+                        int dim = this.G.get(j).dim;
+                        float valInf = this.G.get(j).val;
+                        writer.println(dim + " " + valInf + " inf");
+                    }
+                }
+            }
+
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Could not write to file \"" + filename + "\".");
+        }
     }
 
 }
