@@ -1,18 +1,15 @@
 package com.company;
 
-import java.util.Collections;
-import java.util.Vector;
-import java.util.TreeSet;
-import java.util.HashMap;
+import java.util.*;
 
 
 public class BoundaryMatrix {
 
-    private int n;
-    private Vector<Simplex> G;
-    boolean[][] boundaryMatrix;
+    ArrayList<ArrayList<Integer>> boundaryMatrix;
     int[] lowIndices;
     int[] lowColumn;
+    private int n;
+    private Vector<Simplex> G;
 
     BoundaryMatrix(Vector<Simplex> F) {
         this.n = F.size();
@@ -32,7 +29,10 @@ public class BoundaryMatrix {
         }
 
 
-        this.boundaryMatrix = new boolean[n][n];
+        this.boundaryMatrix = new ArrayList<ArrayList<Integer>>();
+        for (int i = 0; i < n; i++) {
+            this.boundaryMatrix.add(new ArrayList<Integer>());
+        }
 
         // We create a HashMap to store and retrieve easily
         // the index of a given simplex in the simplicial complex.
@@ -51,11 +51,13 @@ public class BoundaryMatrix {
                 // For each vertex in the simplex, we remove it and put a true value
                 // in the row of the corresponding subset. This way, we get a true in
                 // position (i,j) iff the j-th simplex is a boundary of the i-th simplex.
+                // In the case of the sparse data, we simply add the index of the row
+                // to the the list of the j-th column.
                 for (int k : s.vert) {
                     TreeSet<Integer> subset = new TreeSet<>(s.vert);
                     subset.remove(k);
                     int j = simplexIndices.get(subset);
-                    boundaryMatrix[j][i] = true;
+                    boundaryMatrix.get(i).add(j);
                 }
             }
         }
@@ -64,20 +66,26 @@ public class BoundaryMatrix {
     // reductColumn takes the indices of two columns i < j and substracts column i from column j.
     // Since we work in Z/2Z, substracting is equivalent to XOR.
     private void reductColumns(int i, int j) {
-        for (int k = 0; k < this.n; k++) {
-            boundaryMatrix[k][j] = boundaryMatrix[k][i] ^ boundaryMatrix[k][j];
+        ArrayList<Integer> ithColumn = (ArrayList<Integer>) boundaryMatrix.get(i).clone();
+        ArrayList<Integer> jthColumn = (ArrayList<Integer>) boundaryMatrix.get(j).clone();
+        // Symmetric difference (equivalent to XOR)
+        for (Integer k: ithColumn) {
+            if (jthColumn.contains(k)) {
+                jthColumn.remove(k);
+            } else {
+                jthColumn.add(k);
+            }
         }
+        boundaryMatrix.set(j, jthColumn);
     }
 
     // Returns the row number of the lowest non-sero entry in column j, or -1 if the column is empty.
     private int getLow(int j) {
-        int res = -1;
-        for (int k = 0; k < this.n; k++) {
-            if (boundaryMatrix[k][j]) {
-                res = k;
-            }
+        if (boundaryMatrix.get(j).isEmpty()) {
+            return -1;
+        } else {
+            return Collections.max(boundaryMatrix.get(j));
         }
-        return res;
     }
 
     void reduction() {
@@ -89,7 +97,7 @@ public class BoundaryMatrix {
         for (int j = 0; j < this.n; j++) {
             int low = getLow(j);
             // While the column is not empty and there exists a previous column with the same pivot:
-            while(low != -1 && lowColumn[low] != -1) {
+            while (low != -1 && lowColumn[low] != -1) {
                 // We update the j-th column
                 int i = lowColumn[low];
                 reductColumns(i, j);
@@ -118,8 +126,7 @@ public class BoundaryMatrix {
                 float valSup = this.G.get(j).val;
                 int dim = this.G.get(i).dim;
                 res += dim + " " + valInf + " " + valSup + "\n";
-            }
-            else {
+            } else {
                 // If the column is empty and the corresponding row has no pivot:
                 if (lowColumn[j] == -1) {
                     // We add the interval [j, inf)
