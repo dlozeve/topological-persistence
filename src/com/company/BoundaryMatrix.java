@@ -125,7 +125,9 @@ public class BoundaryMatrix {
                 float valInf = this.G.get(i).val;
                 float valSup = this.G.get(j).val;
                 int dim = this.G.get(i).dim;
-                res += dim + " " + valInf + " " + valSup + "\n";
+                if (valSup != valInf) {
+                    res += dim + " " + valInf + " " + valSup + "\n";
+                }
             } else {
                 // If the column is empty and the corresponding row has no pivot:
                 if (lowColumn[j] == -1) {
