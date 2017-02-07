@@ -1,0 +1,76 @@
+\usepackage{fontspec}
+
+\setmainfont[Numbers=OldStyle]{Linux Libertine O}
+\setsansfont[Numbers=OldStyle]{Linux Biolinum O}
+%\setmonofont{Inconsolata}
+\setmonofont[Scale=0.83]{Bitstream Vera Sans Mono}
+
+\usepackage{polyglossia}
+\setdefaultlanguage{english}
+
+%\usepackage{graphicx}
+\usepackage{xcolor}
+%\usepackage{wrapfig}
+%\usepackage{subfig}
+%\usepackage{lettrine}
+%\usepackage{tikz}
+%\usepackage{amsmath,amssymb}
+
+%\usepackage{pdfpages}
+
+\usepackage{microtype}
+
+%% Propriétés du document PDF
+\usepackage[hidelinks]{hyperref}
+
+\hypersetup{
+  pdfauthor={Joseph Budin, Dimitri Lozeve},
+  pdftitle={TDA TD5: Topological Persistence},
+  pdfsubject={Report},
+  pdfkeywords={report,tda,td5,topological,persistence},
+  pdfpagemode=UseOutlines,
+  pdfpagelayout=TwoColumnRight
+}
+
+\usepackage{minted}
+\setminted[java]{linenos,stepnumber=5,autogobble,fontsize=\small}
+\setminted[python]{linenos,stepnumber=5,autogobble,fontsize=\small}
+
+%% Pour la classe memoir /!\
+
+%% Marges
+\setulmarginsandblock{3cm}{3cm}{*}
+\setlrmarginsandblock{3cm}{3cm}{*}
+\checkandfixthelayout
+
+%% Numérotation des divisions logiques
+\setsecnumdepth{subsection}
+\maxsecnumdepth{subsection}
+
+%% Profondeur de la ToC
+\settocdepth{subsection}
+\maxtocdepth{subsection}
+
+%% Style des titres des divisions logiques
+\setsecheadstyle{\Large\scshape}
+\setsubsecheadstyle{\large\scshape}
+
+%% style des environnements description
+%\renewcommand*{\descriptionlabel}[1]{\hspace\labelsep
+%  \normalfont\itshape #1}
+
+%% épigraphes
+%\setlength{\epigraphwidth}{0.5\textwidth}
+%\epigraphtextposition{flushleftright}
+
+
+\author{Joseph Budin \and Dimitri Lozeve}
+\date{\today}
+\title{\Huge TD5: Topological Persistence\\ \LARGE Report}
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "report"
+%%% End:
