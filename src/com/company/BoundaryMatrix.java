@@ -7,9 +7,9 @@ import java.util.*;
 
 public class BoundaryMatrix {
 
-    ArrayList<ArrayList<Integer>> boundaryMatrix;
-    int[] lowIndices;
-    int[] lowColumn;
+    private ArrayList<ArrayList<Integer>> boundaryMatrix;
+    private int[] lowIndices;
+    private int[] lowColumn;
     private int n;
     private Vector<Simplex> G;
 
